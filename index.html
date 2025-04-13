@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FF Логистика - Надежные грузоперевозки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      /* Критические стили для предотвращения прыжков */
+      :root {
+        --header-height: 84px;
+        --logo-height: 52px;
+      }
+      body {
+        margin: 0;
+        padding-top: var(--header-height);
+        min-height: 100vh;
+      }
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--header-height);
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+      }
+      .hero-section {
+        min-height: calc(100vh - var(--header-height));
+        padding-top: var(--header-height);
+        display: flex;
+        align-items: center;
+      }
+      /* Предзагрузка контейнера для предотвращения смещений */
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
