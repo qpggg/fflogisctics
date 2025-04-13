@@ -51,4 +51,4 @@ app.post('/api/send-email', async (req, res) => {
 });
 
 // Vercel serverless function export
-module.exports = app; 
+module.exports = app;
