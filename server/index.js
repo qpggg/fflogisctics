@@ -1,13 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Resend } = require('resend');
+const path = require('path');
 
 const app = express();
+// Check if RESEND_API_KEY is provided
+if (!process.env.RESEND_API_KEY) {
+  console.error('RESEND_API_KEY environment variable is not set');
+  process.exit(1);
+}
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from the React app build
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// API routes
 app.post('/api/send-email', async (req, res) => {
   console.log('Received request:', req.body);
   
@@ -50,5 +63,17 @@ app.post('/api/send-email', async (req, res) => {
   }
 });
 
-// Vercel serverless function export
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+});
+
+// Export for PM2
 module.exports = app;
