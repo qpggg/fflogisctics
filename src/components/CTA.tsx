@@ -36,9 +36,10 @@ const CTA = () => {
       setFormData({ name: '', phone: '' });
     } catch (error) {
       console.error('Error sending email:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при отправке';
       setSubmitStatus({
         type: 'error',
-        message: 'Произошла ошибка при отправке. Пожалуйста, попробуйте позже.'
+        message: `Ошибка: ${errorMessage}. Пожалуйста, попробуйте позже.`
       });
     } finally {
       setIsSubmitting(false);

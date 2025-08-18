@@ -1,25 +1,50 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Hero() {
   const truckRef = useRef<HTMLImageElement>(null);
+  const [isTruckLoaded, setIsTruckLoaded] = useState(false);
+  const [isTruckVisible, setIsTruckVisible] = useState(false);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
   useEffect(() => {
-    // Инициализация анимации грузовика
-    if (truckRef.current) {
-      const img = truckRef.current;
-      
-      if (img.complete) {
-        requestAnimationFrame(() => {
-          img.classList.add('loaded');
-        });
-      } else {
-        img.onload = () => {
-          requestAnimationFrame(() => {
-            img.classList.add('loaded');
-          });
-        };
-      }
+    const img = truckRef.current;
+    if (!img) return;
+
+    const handleImageLoad = () => {
+      setIsTruckLoaded(true);
+      // Небольшая задержка для плавности
+      setTimeout(() => {
+        setIsTruckVisible(true);
+      }, 100);
+    };
+
+    const handleImageError = () => {
+      // Если изображение не загрузилось, все равно показываем анимацию
+      setIsTruckLoaded(true);
+      setTimeout(() => {
+        setIsTruckVisible(true);
+      }, 100);
+    };
+
+    const handleAnimationEnd = () => {
+      setIsAnimationComplete(true);
+    };
+
+    if (img.complete) {
+      handleImageLoad();
+    } else {
+      img.addEventListener('load', handleImageLoad);
+      img.addEventListener('error', handleImageError);
     }
+
+    // Добавляем слушатель завершения анимации
+    img.addEventListener('animationend', handleAnimationEnd);
+
+    return () => {
+      img.removeEventListener('load', handleImageLoad);
+      img.removeEventListener('error', handleImageError);
+      img.removeEventListener('animationend', handleAnimationEnd);
+    };
   }, []);
 
   return (
@@ -45,8 +70,10 @@ export default function Hero() {
               alt="Грузовой автомобиль"
               width={1200}
               height={675}
-              className="truck-image"
+              className={`truck-image ${isTruckLoaded ? 'loaded' : ''} ${isTruckVisible ? 'visible' : ''} ${isAnimationComplete ? 'animation-complete' : ''}`}
               loading="eager"
+              onLoad={() => setIsTruckLoaded(true)}
+              onError={() => setIsTruckLoaded(true)}
             />
           </div>
         </div>

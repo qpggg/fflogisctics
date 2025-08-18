@@ -5,7 +5,7 @@ export interface EmailData {
 
 export const sendEmail = async (data: EmailData) => {
   try {
-    const response = await fetch('/api/send-email', {
+    const response = await fetch('http://localhost:3000/api/send-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -13,11 +13,14 @@ export const sendEmail = async (data: EmailData) => {
       body: JSON.stringify(data),
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const errorMessage = responseData.error || responseData.details || 'Network response was not ok';
+      throw new Error(errorMessage);
     }
 
-    return await response.json();
+    return responseData;
   } catch (error) {
     console.error('Error sending email:', error);
     throw error;
