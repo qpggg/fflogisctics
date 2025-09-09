@@ -1563,6 +1563,17 @@
   color: #FF4B12;
 }
 
+/* Force email text to a single line and prevent wrapping */
+.email-link {
+  white-space: nowrap;
+}
+
+.email-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   .footer-content {
     grid-template-columns: 1fr;
